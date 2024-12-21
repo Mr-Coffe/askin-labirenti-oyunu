@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aşkın Labirenti</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e7e34; /* Zümrüt yeşili */
+            margin: 0;
+            padding: 20px;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            box-sizing: border-box; /* Tüm elemanların boyut hesaplamasını düzeltmek için */
+        }
+
+        .game-container {
+            max-width: 600px;
+            width: 90%; /* Mobil cihazlarda daha iyi görünmesi için */
+            margin: 0 auto;
+            background: #ffc0cb; /* Pembe */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .message-box {
+            max-width: 500px;
+            width: 90%; /* Mobil cihazlarda daha iyi görünmesi için */
+            margin: 0 auto;
+            background-color: #1e7e34;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            white-space: pre-line;
+            box-sizing: border-box; /* İçeriğin kutuyu taşmasını engelle */
+        }
+
+        .gift-box {
+            width: 150px;
+            height: 150px;
+            background-color: #1e7e34;
+            border-radius: 10px;
+            position: relative;
+            margin: 20px auto;
+            cursor: pointer;
+        }
+
+        .gift-ribbon-horizontal {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 15px;
+            background-color: red;
+            transform: translateY(-50%);
+        }
+
+        .gift-ribbon-vertical {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 15px;
+            background-color: red;
+            transform: translateX(-50%);
+        }
+
+        .gift-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            background-color: red;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+
+        .output {
+            margin-bottom: 20px;
+            min-height: 100px;
+           
+             box-sizing: border-box;
+           
+        }
+
+        input {
+            width: calc(100% - 22px); /* Padding ve border'ı hesaba kat */
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            color: black;
+             box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+             box-sizing: border-box;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+        /* Küçük ekranlar için düzenlemeler */
+        @media (max-width: 600px) {
+           body {
+                padding: 10px; /* Daha az boşluk */
+            }
+             .game-container, .message-box {
+                padding: 15px; /* Daha az iç boşluk */
+             }
+        }
+    </style>
+</head>
+<body>
+    <div class="message-box" id="messageBox">
+         Sevgili Medine,
+
+         Doğum günün kutlu olsun! Bu özel gününde seni ne kadar çok sevdiğimi ve benim için ne kadar önemli olduğunu sana nasıl ileticeğimi bilemedim, bende üzerine en çok uğraştığım ve çok sevdiğim şeylerin başında gelen yazılım ve ilkokuldan beri çok sevdiğim bilgisayar oyunu oynamayı birleştirip en sevdiğime hediye bir oyun yapmak istedim
+        Uzun zamandır sanada bahsettiğim kod aslında bu oyundu Oyunda İkimizin güzel anlarını ve sevdiğimiz şeyleri konu almaya çalıştım umarım hediyemi beğenirsin
+         Nice mutlu yıllara! ❤️ seni seviyorum  ---Bora- ~~Romeodan Juliete~~ (oyunu başlatmak için hediye kutusunun ortasındaki kırmızı noktaya tıkla)
+    </div>
+    <div class="game-container">
+       <div class="gift-box" id="giftBox">
+            <div class="gift-ribbon-horizontal"></div>
+             <div class="gift-ribbon-vertical"></div>
+            <div class="gift-button"></div>
+        </div>
+        <div class="output" id="output">
+        </div>
+        <input type="text" id="userInput" placeholder="Cevabınızı yazın..." style="display: none;">
+        <button id="submitBtn" style="display: none;">Gönder</button>
+    </div>
+    <script>
+       // Oyun Değişkenleri
+        let konum = "giris";
+        let oyuncuIsmi;
+        let outputDiv = document.getElementById("output");
+        let userInput = document.getElementById("userInput");
+        let submitBtn = document.getElementById("submitBtn");
+        let giftBox = document.getElementById("giftBox");
+         let messageBox = document.getElementById("messageBox");
+        
+        function clearScreen(){
+            outputDiv.innerHTML = "";
+        }
+        function updateOutput(text) {
+           outputDiv.innerHTML += `<p>${text}</p>`;
+        }
+        function clearInput() {
+            userInput.value = "";
+        }
+         function printSlow(text, delay = 20) {
+            return new Promise(resolve => {
+                let i = 0;
+                let interval = setInterval(() => {
+                    if (i < text.length) {
+                        outputDiv.innerHTML += text[i];
+                        i++;
+                    } else {
+                        clearInterval(interval);
+                        outputDiv.innerHTML += '<br>';
+                        resolve();
+                    }
+                }, delay);
+            });
+        }
+        function startGame(){
+            userInput.style.display = "block";
+             submitBtn.style.display = "block";
+             oyunDongusu();
+        }
+        giftBox.addEventListener("click", async () => {
+            giftBox.style.display = "none";
+            messageBox.style.display = "none";
+             clearScreen();
+            await printSlow("Doğum Günün Kutlu Olsun!");
+            await printSlow("");
+           startGame();
+
+        })
+         async function girisMesaji() {
+            clearScreen();
+            await printSlow("Aşkın Labirenti'ne hoş geldin, sevgilim...");
+            await printSlow("Bu labirent, kalbimizin en gizli köşelerini, hem flört anılarımızı hem de şimdiki aşkımızı saklıyor...");
+            await printSlow("Acaba bu labirentin büyüsüne kapılmaya hazır mıyız?");
+          return new Promise(resolve => {
+                submitBtn.onclick = async () => {
+                    let isim = userInput.value.toLowerCase().trim();
+                    if (isim === "medine" || isim === "bora") {
+                        clearInput();
+                         resolve(isim);
+                    } else {
+                        await printSlow("Lütfen 'Medine' veya 'Bora' yazarak başla.");
+                        clearInput();
+                    }
+                };
+            });
+        }
+          async function labirentGirisi(oyuncuIsmi) {
+            clearScreen();
+            await printSlow("Labirentin girişindeyiz, kalplerimiz heyecanla çarpıyor...");
+            await printSlow("Etrafımız devasa duvarlarla çevrili, yollar sanki kalbimizin derinliklerine uzanıyor.");
+             await printSlow("Ama merak etme, bu labirentin sırlarını beraber çözeceğiz.");
+            await printSlow("");
+
+            if (oyuncuIsmi === "medine") {
+                await printSlow("Labirentin ilk sırrı, senin büyülendiğin o dünya...");
+                 await printSlow("Evet, o büyülü an... Hangi film serisi ile kalbimize dokunmuştuk?");
+                 let cevap1 = await bekleyenCevapFonksiyonu("twilight", "Yanlış cevap, labirentin büyüsü seni yutmak üzere. Tekrar dene.", "Aşk sana yardım etti, bu bölümü geçtin!");
+                if(cevap1 === false){
+                     return;
+                }
+                await printSlow("");
+                await printSlow("Aklımızdan hiç çıkmayan o müzikleri hatırlayalım şimdi de... Hangi şarkılar kalbimizin ritmi gibiydi?");
+                  let medineSarkilar = ["the neighborhood", "aşk ağlama ben ağlarım", "senden daha güzel", "seni kendime sakladım", "dinle beni bi", "sen varsın diye"]
+                  let cevap2 = await bekleyenCevapFonksiyonu(medineSarkilar, "Yanlış cevap, kalbinin sesini tekrar dinle, bir şansın daha var.", "Aşk sana yardım etti, bu bölümü geçtin!");
+                    if (cevap2 === false) {
+                       return;
+                     }
+                 let mesaj = "";
+                 if(cevap2 == "the neighborhood"){
+                     mesaj = "Doğru! 'Sweater Weather' o gün içimizi ısıtmış, aşkımızın sesini fısıldamıştı."
+                   }else if(cevap2 == "aşk ağlama ben ağlarım"){
+                        mesaj = "Doğru! Bu şarkı sanki bizim iç sesimiz, kalbimizin fısıltısı."
+                     }else if(cevap2 == "senden daha güzel"){
+                        mesaj = "Doğru! Gözlerindeki güzellik, bu labirenti aydınlatıyor."
+                   }else if(cevap2 == "seni kendime sakladım"){
+                        mesaj = "Doğru! Seni kalbime kazıdım, bu labirentte kaybolmam mümkün değil."
+                    }else if(cevap2 == "dinle beni bi"){
+                        mesaj = "Doğru! Sadece seni dinliyorum, sen benim pusulam oldun."
+                    }else if(cevap2 == "sen varsın diye"){
+                      mesaj = "Doğru! Senin varlığın, bu labirenti bir cennete dönüştürüyor."
+                    }
+                   await printSlow(mesaj);
+                await printSlow("Şimdi labirentte biraz yürüyoruz...");
+                 await printSlow("Ve karşımızda... O çok güzel buluşmamızı yaptığımız o yer...");
+
+                return "avm_bulusmasi_labirent";
+             }else if (oyuncuIsmi === "bora"){
+                   await printSlow("Labirentin ilk sırrı, senin büyülendiğin o dünya...");
+                     await printSlow("Evet, senin önerin üzerine izlediğim ve çook beğendiğim filmin adı neydi?");
+                    let cevap1 = await bekleyenCevapFonksiyonu("labirent", "Yanlış cevap, kalbinin sesini tekrar dinle. Tekrar dene.", "Aşk sana yardım etti, bu bölümü geçtin!");
+                    if(cevap1 === false){
+                        return;
+                   }
+                   await printSlow("");
+                    await printSlow("Aklımıza gelen o şarkıları hatırlayalım şimdi de... Hangi şarkılar kalbimizin ritmi gibiydi?");
+                    let boraSarkilar = ["raf", "aşk ağlama ben ağlarım", "senden daha güzel", "seni kendime sakladım", "dinle beni bi", "sen varsın diye"]
+                   let cevap2 = await bekleyenCevapFonksiyonu(boraSarkilar, "Yanlış cevap, kalbinin sesini tekrar dinle, bir şansın daha var.", "Aşk sana yardım etti, bu bölümü geçtin!");
+                   if(cevap2 === false){
+                        return;
+                      }
+                   let mesaj = "";
+                     if(cevap2 == "raf"){
+                         mesaj = "Doğru! 'Güneş' içimizi ısıtmış, labirentin karanlığını aydınlatmıştı."
+                        }else if(cevap2 == "aşk ağlama ben ağlarım"){
+                           mesaj ="Doğru! Bu şarkı sanki bizim iç sesimiz, kalbimizin fısıltısı."
+                         }else if(cevap2 == "senden daha güzel"){
+                           mesaj = "Doğru! Gözlerindeki güzellik, bu labirenti aydınlatıyor."
+                        }else if(cevap2 == "seni kendime sakladım"){
+                          mesaj = "Doğru! Seni kalbime kazıdım, bu labirentte kaybolmam mümkün değil."
+                          }else if(cevap2 == "dinle beni bi"){
+                           mesaj = "Doğru! Sadece seni dinliyorum, sen benim pusulam oldun."
+                        }else if(cevap2 == "sen varsın diye"){
+                         mesaj = "Doğru! Senin varlığın, bu labirenti bir cennete dönüştürüyor."
+                        }
+                     await printSlow(mesaj);
+
+                      await printSlow("Şimdi labirentte biraz yürüyoruz...");
+                     await printSlow("Ve karşımızda... O çok güzel buluşmamızı yaptığımız o yer...");
+
+
+                  return "avm_bulusmasi_labirent";
+               }
+        }
+        async function bekleyenCevapFonksiyonu(dogruCevap, yanlisMesaji, yanlisMesaji2) {
+             return new Promise(resolve => {
+               let denemeSayisi = 0;
+              submitBtn.onclick = async () => {
+                    let cevap = userInput.value.toLowerCase().trim();
+                    if(!cevap){
+                        await printSlow("Lütfen bir cevap yazın.");
+                        return;
+                    }
+                  if(Array.isArray(dogruCevap)){
+                     if (dogruCevap.includes(cevap)) {
+                       resolve(cevap);
+                       clearInput();
+                     } else if (denemeSayisi == 0) {
+                          await printSlow(yanlisMesaji);
+                           denemeSayisi++;
+                          clearInput();
+                     } else {
+                          if (yanlisMesaji2) {
+                           await printSlow(yanlisMesaji2);
+                           }
+                           await printSlow("Aşk sana yardım etti, bu bölümü geçtin!");
+                          clearInput();
+                         resolve(false);
+                     }
+                    }else if (cevap === dogruCevap) {
+                         resolve(true);
+                         clearInput();
+                   } else if (denemeSayisi == 0){
+                       await printSlow(yanlisMesaji);
+                       denemeSayisi++;
+                       clearInput();
+                    }else{
+                       if (yanlisMesaji2) {
+                         await printSlow(yanlisMesaji2);
+                        }
+                          await printSlow("Aşk sana yardım etti, bu bölümü geçtin!");
+                        clearInput();
+                         resolve(false);
+                     }
+                   }
+             })
+        }
+          async function avmBulusmasiLabirent() {
+           clearScreen();
+          await printSlow("O gün, sanki labirentte bir vaha gibiydik...");
+           await printSlow("Yemek yedik, kahvelerimizi yudumladık, sohbetler ettik... Ve elbette o sarılışımız...");
+            await printSlow("Oturduğumuz o güzel cafenin adı neydi?");
+             let cafeCevabi = await bekleyenCevapFonksiyonu("starbucks", "Yanlış cevap, o gün kalbinin sesini dinle. Tekrar dene.", "Aşk sana yardım etti, bu bölümü geçtin!");
+                if(cafeCevabi === false){
+                   return
+                 }
+          await printSlow("Evet, o gün çok güzeldi...");
+           await printSlow("Peki, en sevdiğimiz cheescake neydi?");
+           let tatliCevabi = await bekleyenCevapFonksiyonu("frambuazlı cheesecake", "Hayır, o gün o kadar güzeldi ki, kalbinin sesini tekrar dinle. Tekrar dene.","Aşk sana yardım etti, bu bölümü geçtin!");
+             if(tatliCevabi === false){
+                  return;
+                 }
+            await printSlow("Harika şuana kadar çok iyi ilerledik ve başarmak üzereyiz ama bilmemiz gereken bişey var fraumbuazlı chescake de şeker olurmu?");
+             let sekerCevabi =  await bekleyenCevapFonksiyonu("olmasın", "Yanlış cevap, o gün kalbinin sesini dinle, tatlı yemiştin ama şeker istememiştin.", "Aşk sana yardım etti, bu bölümü geçtin!");
+           if(sekerCevabi === false){
+                  return;
+               }
+          await printSlow("Doğru, sen varken şeker neymiş zaten? 😉");
+         return "sevgili_olma_labirent"
+         }
+        async function sevgiliOlmaLabirent() {
+             clearScreen();
+            await printSlow("Labirentin sonunda, aşkımızın en özel anına ulaştık...");
+           await printSlow("17 Aralık'ı 18 Aralık'a bağlayan gece, saat 1 gibi... Kalplerimiz bir oldu.");
+           await printSlow("Artık bu labirentte sonsuza dek birlikte yolculuk yapacağız, sevgili olarak...");
+            await printSlow("Seni çok seviyorum, hayatımın anlamı! ❤️");
+            return "bitti";
+         }
+        async function oyunDongusu() {
+             while (konum !== "bitti") {
+                try{
+                     if (konum === "giris") {
+                        oyuncuIsmi = await girisMesaji();
+                        konum = "labirent_girisi";
+                     }else if (konum === "labirent_girisi") {
+                        let result = await labirentGirisi(oyuncuIsmi);
+                         if(result){
+                           konum = result;
+                         }
+                         
+                    } else if (konum === "avm_bulusmasi_labirent") {
+                          let result = await avmBulusmasiLabirent();
+                           if(result){
+                             konum = result;
+                           }
+                     } else if (konum === "sevgili_olma_labirent") {
+                        konum = await sevgiliOlmaLabirent();
+                     } else {
+                        await printSlow("Hata! Bilinmeyen bir yere girdin.");
+                         break;
+                        }
+                   }
+               catch(error){
+                    console.error("Oyun döngüsünde hata oluştu:", error);
+                    await printSlow("Oyunda beklenmedik bir hata oluştu. Lütfen sayfayı yenileyin.");
+                    break;
+                 }
+               }
+            await printSlow("Oyun bitti. Seni her zaman, her yerde seviyorum! ❤️");
+         }
+       
+    </script>
+</body>
+</html>
