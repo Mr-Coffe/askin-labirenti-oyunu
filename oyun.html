@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aşkın Labirenti</title>
+    <title>Hediye</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -195,7 +195,7 @@
         })
          async function girisMesaji() {
             clearScreen();
-            await printSlow("Aşkın Labirenti'ne hoş geldin, sevgilim...");
+            await printSlow("Bu küçük labirent oyununa hoş geldin, sevgilim...");
             await printSlow("Bu labirent, kalbimizin en gizli köşelerini, hem flört anılarımızı hem de şimdiki aşkımızı saklıyor...");
             await printSlow("Acaba bu labirentin büyüsüne kapılmaya hazır mıyız?");
           return new Promise(resolve => {
@@ -221,17 +221,13 @@
             if (oyuncuIsmi === "medine") {
                 await printSlow("Labirentin ilk sırrı, senin büyülendiğin o dünya...");
                  await printSlow("Evet, o büyülü an... Hangi film serisi ile kalbimize dokunmuştuk?");
-                 let cevap1 = await bekleyenCevapFonksiyonu("twilight", "Yanlış cevap, labirentin büyüsü seni yutmak üzere. Tekrar dene.", "Aşk sana yardım etti, bu bölümü geçtin!");
-                if(cevap1 === false){
-                     return;
-                }
+                 let cevap1 = await bekleyenCevapFonksiyonu("twilight", "Yanlış cevap, labirentin büyüsü seni yutmak üzere. Tekrar dene.", "Aşk sana yardım etti, bu bölümü geçtin!", true);
+                
                 await printSlow("");
                 await printSlow("Aklımızdan hiç çıkmayan o müzikleri hatırlayalım şimdi de... Hangi şarkılar kalbimizin ritmi gibiydi?");
-                  let medineSarkilar = ["the neighborhood", "aşk ağlama ben ağlarım", "senden daha güzel", "seni kendime sakladım", "dinle beni bi", "sen varsın diye"]
-                  let cevap2 = await bekleyenCevapFonksiyonu(medineSarkilar, "Yanlış cevap, kalbinin sesini tekrar dinle, bir şansın daha var.", "Aşk sana yardım etti, bu bölümü geçtin!");
-                    if (cevap2 === false) {
-                       return;
-                     }
+                  let medineSarkilar = ["the neighborhood", "aşk ağlama ben ağlarım", "senden daha güzel", "seni kendime sakladım", "dinle beni bi", "sen varsın diye","Raf"]
+                  let cevap2 = await bekleyenCevapFonksiyonu(medineSarkilar, "Yanlış cevap, kalbinin sesini tekrar dinle, bir şansın daha var.", "Aşk sana yardım etti, bu bölümü geçtin!",true);
+
                  let mesaj = "";
                  if(cevap2 == "the neighborhood"){
                      mesaj = "Doğru! 'Sweater Weather' o gün içimizi ısıtmış, aşkımızın sesini fısıldamıştı."
@@ -254,17 +250,13 @@
              }else if (oyuncuIsmi === "bora"){
                    await printSlow("Labirentin ilk sırrı, senin büyülendiğin o dünya...");
                      await printSlow("Evet, senin önerin üzerine izlediğim ve çook beğendiğim filmin adı neydi?");
-                    let cevap1 = await bekleyenCevapFonksiyonu("labirent", "Yanlış cevap, kalbinin sesini tekrar dinle. Tekrar dene.", "Aşk sana yardım etti, bu bölümü geçtin!");
-                    if(cevap1 === false){
-                        return;
-                   }
+                    let cevap1 = await bekleyenCevapFonksiyonu("labirent", "Yanlış cevap, kalbinin sesini tekrar dinle. Tekrar dene.", "Aşk sana yardım etti, bu bölümü geçtin!",true);
+                   
                    await printSlow("");
                     await printSlow("Aklımıza gelen o şarkıları hatırlayalım şimdi de... Hangi şarkılar kalbimizin ritmi gibiydi?");
                     let boraSarkilar = ["raf", "aşk ağlama ben ağlarım", "senden daha güzel", "seni kendime sakladım", "dinle beni bi", "sen varsın diye"]
-                   let cevap2 = await bekleyenCevapFonksiyonu(boraSarkilar, "Yanlış cevap, kalbinin sesini tekrar dinle, bir şansın daha var.", "Aşk sana yardım etti, bu bölümü geçtin!");
-                   if(cevap2 === false){
-                        return;
-                      }
+                   let cevap2 = await bekleyenCevapFonksiyonu(boraSarkilar, "Yanlış cevap, kalbinin sesini tekrar dinle, bir şansın daha var.", "Aşk sana yardım etti, bu bölümü geçtin!", true);
+                   
                    let mesaj = "";
                      if(cevap2 == "raf"){
                          mesaj = "Doğru! 'Güneş' içimizi ısıtmış, labirentin karanlığını aydınlatmıştı."
@@ -288,7 +280,7 @@
                   return "avm_bulusmasi_labirent";
                }
         }
-        async function bekleyenCevapFonksiyonu(dogruCevap, yanlisMesaji, yanlisMesaji2) {
+        async function bekleyenCevapFonksiyonu(dogruCevap, yanlisMesaji, yanlisMesaji2, devamEt) {
              return new Promise(resolve => {
                let denemeSayisi = 0;
               submitBtn.onclick = async () => {
@@ -309,12 +301,15 @@
                           if (yanlisMesaji2) {
                            await printSlow(yanlisMesaji2);
                            }
-                           await printSlow("Aşk sana yardım etti, bu bölümü geçtin!");
+                           if(devamEt){
+                                 await printSlow("Aşk sana yardım etti, bu bölümü geçtin!");
+                                }
+                            
                           clearInput();
-                         resolve(false);
+                         resolve(cevap);
                      }
                     }else if (cevap === dogruCevap) {
-                         resolve(true);
+                         resolve(cevap);
                          clearInput();
                    } else if (denemeSayisi == 0){
                        await printSlow(yanlisMesaji);
@@ -324,9 +319,11 @@
                        if (yanlisMesaji2) {
                          await printSlow(yanlisMesaji2);
                         }
-                          await printSlow("Aşk sana yardım etti, bu bölümü geçtin!");
+                         if(devamEt){
+                               await printSlow("Aşk sana yardım etti, bu bölümü geçtin!");
+                             }
                         clearInput();
-                         resolve(false);
+                         resolve(cevap);
                      }
                    }
              })
@@ -336,21 +333,15 @@
           await printSlow("O gün, sanki labirentte bir vaha gibiydik...");
            await printSlow("Yemek yedik, kahvelerimizi yudumladık, sohbetler ettik... Ve elbette o sarılışımız...");
             await printSlow("Oturduğumuz o güzel cafenin adı neydi?");
-             let cafeCevabi = await bekleyenCevapFonksiyonu("starbucks", "Yanlış cevap, o gün kalbinin sesini dinle. Tekrar dene.", "Aşk sana yardım etti, bu bölümü geçtin!");
-                if(cafeCevabi === false){
-                   return
-                 }
+             let cafeCevabi = await bekleyenCevapFonksiyonu("starbucks", "Yanlış cevap, o gün kalbinin sesini dinle. Tekrar dene.", "Aşk sana yardım etti, bu bölümü geçtin!", true);
+                
           await printSlow("Evet, o gün çok güzeldi...");
            await printSlow("Peki, en sevdiğimiz cheescake neydi?");
-           let tatliCevabi = await bekleyenCevapFonksiyonu("frambuazlı cheesecake", "Hayır, o gün o kadar güzeldi ki, kalbinin sesini tekrar dinle. Tekrar dene.","Aşk sana yardım etti, bu bölümü geçtin!");
-             if(tatliCevabi === false){
-                  return;
-                 }
+           let tatliCevabi = await bekleyenCevapFonksiyonu("frambuazlı cheesecake", "Hayır, o gün o kadar güzeldi ki, kalbinin sesini tekrar dinle. Tekrar dene.","Aşk sana yardım etti, bu bölümü geçtin!", true);
+            
             await printSlow("Harika şuana kadar çok iyi ilerledik ve başarmak üzereyiz ama bilmemiz gereken bişey var fraumbuazlı chescake de şeker olurmu?");
-             let sekerCevabi =  await bekleyenCevapFonksiyonu("olmasın", "Yanlış cevap, o gün kalbinin sesini dinle, tatlı yemiştin ama şeker istememiştin.", "Aşk sana yardım etti, bu bölümü geçtin!");
-           if(sekerCevabi === false){
-                  return;
-               }
+             let sekerCevabi =  await bekleyenCevapFonksiyonu("olmasın", "Yanlış cevap, o gün kalbinin sesini dinle, tatlı yemiştin ama şeker istememiştin.", "Aşk sana yardım etti, bu bölümü geçtin!", true);
+           
           await printSlow("Doğru, sen varken şeker neymiş zaten? 😉");
          return "sevgili_olma_labirent"
          }
