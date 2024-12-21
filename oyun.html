@@ -179,7 +179,12 @@
                 }, delay);
             });
         }
-        function startGame(){
+
+           function delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+        async function startGame(){
             userInput.style.display = "block";
              submitBtn.style.display = "block";
              oyunDongusu();
@@ -245,6 +250,7 @@
                    await printSlow(mesaj);
                 await printSlow("Şimdi labirentte biraz yürüyoruz...");
                  await printSlow("Ve karşımızda... O çok güzel buluşmamızı yaptığımız o yer...");
+                 await delay(10000);
 
                 return "avm_bulusmasi_labirent";
              }else if (oyuncuIsmi === "bora"){
@@ -275,6 +281,8 @@
 
                       await printSlow("Şimdi labirentte biraz yürüyoruz...");
                      await printSlow("Ve karşımızda... O çok güzel buluşmamızı yaptığımız o yer...");
+
+                     await delay(10000);
 
 
                   return "avm_bulusmasi_labirent";
@@ -337,24 +345,13 @@
                 
           await printSlow("Evet, o gün çok güzeldi...");
            await printSlow("Peki, en sevdiğimiz cheescake neydi?");
-           let tatliCevabi = await bekleyenCevapFonksiyonu("fruambuazlı cheesecake", "Hayır, o gün o kadar güzeldi ki, kalbinin sesini tekrar dinle. Tekrar dene.","Aşk sana yardım etti, bu bölümü geçtin!", true);
+           let tatliCevabi = await bekleyenCevapFonksiyonu("frambuazlı cheesecake", "Hayır, o gün o kadar güzeldi ki, kalbinin sesini tekrar dinle. Tekrar dene.","Aşk sana yardım etti, bu bölümü geçtin!", true);
             
-            await printSlow("Harika şuana kadar çok iyi ilerledik ve başarmak üzereyiz ama bilmemiz gereken bişey var fraumbuazlı chescake de şeker olurmu?");
+            await printSlow("Harika şuana kadar çok iyi ilerledik ve başarmak üzereyiz ama bilmemiz gereken bişey var frambuazlı cheesecake de şeker olur mu?");
              let sekerCevabi =  await bekleyenCevapFonksiyonu("olmaz", "Yanlış cevap, o gün kalbinin sesini dinle, tatlı yemiştin ama şeker istememiştin.", "Aşk sana yardım etti, bu bölümü geçtin!", true);
            
           await printSlow("Doğru, sen varken şeker neymiş zaten? 😉");
-
-
-
-
-
-
-
-
-
-
-
-              
+             await delay(10000);
          return "sevgili_olma_labirent"
          }
         async function sevgiliOlmaLabirent() {
@@ -363,6 +360,7 @@
            await printSlow("17 Aralık'ı 18 Aralık'a bağlayan gece, saat gece 12 ve 1 gibi... Kalplerimiz bir oldu.");
            await printSlow("Artık bu labirentte birlikte yolculuk yapacağız, sevgili olarak...");
             await printSlow("Seni çok seviyorum, hayatımın anlamı! ❤️");
+           await delay(10000);
             return "bitti";
          }
         async function oyunDongusu() {
