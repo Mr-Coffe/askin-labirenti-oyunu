@@ -196,7 +196,7 @@
          async function girisMesaji() {
             clearScreen();
             await printSlow("Bu küçük labirent oyununa hoş geldin, sevgilim...");
-            await printSlow("Bu labirent, kalbimizin en gizli köşelerini, hem flört anılarımızı hem de şimdiki aşkımızı saklıyor...");
+            await printSlow("Bu labirent, hem flört anılarımızı hem de şimdiki aşkımızı saklıyor...");
             await printSlow("Acaba bu labirentin büyüsüne kapılmaya hazır mıyız?");
           return new Promise(resolve => {
                 submitBtn.onclick = async () => {
@@ -221,7 +221,7 @@
             if (oyuncuIsmi === "medine") {
                 await printSlow("Labirentin ilk sırrı, senin büyülendiğin o dünya...");
                  await printSlow("Evet, o büyülü an... Hangi film serisi ile kalbimize dokunmuştuk?");
-                 let cevap1 = await bekleyenCevapFonksiyonu("twilight", "Yanlış cevap, labirentin büyüsü seni yutmak üzere. Tekrar dene.", "Aşk sana yardım etti, bu bölümü geçtin!", true);
+                 let cevap1 = await bekleyenCevapFonksiyonu("alacakaranlık", "Yanlış cevap, labirentin büyüsü seni yutmak üzere. Tekrar dene.", "Aşk sana yardım etti, bu bölümü geçtin!", true);
                 
                 await printSlow("");
                 await printSlow("Aklımızdan hiç çıkmayan o müzikleri hatırlayalım şimdi de... Hangi şarkılar kalbimizin ritmi gibiydi?");
@@ -248,7 +248,7 @@
 
                 return "avm_bulusmasi_labirent";
              }else if (oyuncuIsmi === "bora"){
-                   await printSlow("Labirentin ilk sırrı, senin büyülendiğin o dünya...");
+                   await printSlow("Labirentde bir diğer soru");
                      await printSlow("Evet, senin önerin üzerine izlediğim ve çook beğendiğim filmin adı neydi?");
                     let cevap1 = await bekleyenCevapFonksiyonu("labirent", "Yanlış cevap, kalbinin sesini tekrar dinle. Tekrar dene.", "Aşk sana yardım etti, bu bölümü geçtin!",true);
                    
